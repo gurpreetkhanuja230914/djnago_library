@@ -1,10 +1,45 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.generic import View
 from django.db import transaction
+from .models import Employee
+from .serializers import Employeeserializer
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+import io 
+
 # Create your views here.
 from .models import CreateModelm,CreateProductLog
-def index(request):
-    return HttpResponse("you are at home")
+# def index(request):
+#     s={"nonu":"moti","poonam":"motii"}
+#     return JsonResponse(s)
+# class based view in djnago drf 
+class Jsoncbv(View):
+    def get(self,requests,*args,**kwargs):
+        s={"nonu":"acchhi","poonam":"bahot acchii"}
+        return JsonResponse(s)
+class EmployeeCBV(View):
+    def get(self,requests,*args,**kwargs):
+        json_data=requests.body
+        print(json_data)
+        json_data=list(json_data)
+        print(json_data)
+        if json_data :
+            json_data=requests.body
+            stream=io.BytesIO(json_data)
+
+            print("stream",stream)
+            jss=JSONParser().parse(stream)
+            name=jss.get('emp_name',None)
+            emp=Employee.objects.get(emp_name=name)
+            serializer=Employeeserializer(emp)
+            json_data=JSONRenderer().render(serializer.data)
+            return HttpResponse(json_data,content_type='application/json')
+        qs=Employee.objects.all()
+        serializer=Employeeserializer(qs,many=True)
+        json_data=JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data,content_type='application/json')
 def search_view(request):
     q=request.GET.get("q")
     q="apple"

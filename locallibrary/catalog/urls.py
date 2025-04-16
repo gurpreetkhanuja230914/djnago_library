@@ -3,9 +3,11 @@ from django.urls import path,include
 from . import views
 
 urlpatterns = [
-    path("",views.index,name="index"),
+    # path("",views.index,name="index"),
+    path("",views.Jsoncbv.as_view()),
+    path("emp/",views.EmployeeCBV.as_view()),
     path("create/",views.create_product,name="create_product"),
-     path("success/",views.successful_transaction),
+    path("success/",views.successful_transaction),
     path("fail/", views.fail_transaction),
     path("nested/", views.nested_transaction),
     path("rollback/", views.manual_rollback),

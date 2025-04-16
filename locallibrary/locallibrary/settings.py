@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'catalog',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'catalog.middleware.LoggingMiddleware',
 ]
 
 ROOT_URLCONF = 'locallibrary.urls'
@@ -81,7 +83,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': 'Gurpreet@2309',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '5433',
     
     }
 }
