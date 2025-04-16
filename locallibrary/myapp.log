@@ -519,3 +519,174 @@ INFO:root:Log response: <HttpResponse status_code=500, "text/html; charset=utf-8
 INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/views.py changed, reloading.
 INFO:root:Log request: <WSGIRequest: GET '/catalog/emp/'>
 INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: GET '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: GET '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/views.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: GET '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+ERROR:django.request:Internal Server Error: /catalog/emp/
+Traceback (most recent call last):
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/utils/decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/my/django_project/locallibrary/catalog/views.py", line 72, in put
+    emp=Employee.objects.get(id=emp_no)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/db/models/query.py", line 637, in get
+    raise self.model.DoesNotExist(
+catalog.models.Employee.DoesNotExist: Employee matching query does not exist.
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=500, "text/html; charset=utf-8">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+ERROR:django.request:Internal Server Error: /catalog/emp/
+Traceback (most recent call last):
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/utils/decorators.py", line 46, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/views/generic/base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "/home/my/django_project/locallibrary/catalog/views.py", line 72, in put
+    emp=Employee.objects.get(id=emp_no)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/db/models/query.py", line 637, in get
+    raise self.model.DoesNotExist(
+catalog.models.Employee.DoesNotExist: Employee matching query does not exist.
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=500, "text/html; charset=utf-8">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: GET '/catalog/emp/'>
+INFO:root:Log response: <HttpResponse status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/views.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: GET '/catalog/api'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+INFO:root:Log request: <WSGIRequest: GET '/catalog/api/'>
+INFO:root:Log response: <Response status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/serializers.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/api'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+ERROR:django.request:Internal Server Error: /catalog/api
+Traceback (most recent call last):
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/utils/deprecation.py", line 136, in __call__
+    response = self.process_response(request, response)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/catalog/api/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+INFO:root:Log request: <WSGIRequest: POST '/catalog/api/'>
+INFO:root:Log response: <Response status_code=200, "application/json">
+INFO:django.utils.autoreload:/home/my/django_project/locallibrary/catalog/views.py changed, reloading.
+INFO:root:Log request: <WSGIRequest: GET '/catalog/'>
+INFO:root:Log response: <JsonResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: GET '/favicon.ico'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+WARNING:django.request:Not Found: /favicon.ico
+INFO:root:Log request: <WSGIRequest: GET '/catalog/'>
+INFO:root:Log response: <JsonResponse status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: GET '/update'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+WARNING:django.request:Not Found: /update
+INFO:root:Log request: <WSGIRequest: GET '/catalog/update'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+WARNING:django.request:Not Found: /catalog/update
+INFO:root:Log request: <WSGIRequest: GET '/catalog/test_view'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+INFO:root:Log request: <WSGIRequest: GET '/catalog/test_view/'>
+INFO:root:Log response: <Response status_code=200, "text/html; charset=utf-8">
+INFO:root:Log request: <WSGIRequest: POST '/catalog/test_view/'>
+INFO:root:Log response: <Response status_code=200, "text/html; charset=utf-8">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/test_view/'>
+INFO:root:Log response: <Response status_code=405, "application/json">
+WARNING:django.request:Method Not Allowed: /catalog/test_view/
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/test_view/update'>
+INFO:root:Log response: <HttpResponseNotFound status_code=404, "text/html; charset=utf-8">
+ERROR:django.request:Internal Server Error: /catalog/test_view/update
+Traceback (most recent call last):
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/utils/deprecation.py", line 136, in __call__
+    response = self.process_response(request, response)
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/middleware/common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+  File "/home/my/django_project/dj/lib/python3.8/site-packages/django/middleware/common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+RuntimeError: You called this URL via PUT, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining PUT data. Change your form to point to 127.0.0.1:8000/catalog/test_view/update/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/test_view/update/'>
+INFO:root:Log response: <Response status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PUT '/catalog/test_view/destroy/'>
+INFO:root:Log response: <Response status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: DELETE '/catalog/test_view/destroy/'>
+INFO:root:Log response: <Response status_code=200, "application/json">
+INFO:root:Log request: <WSGIRequest: PATCH '/catalog/test_view/destroy/'>
+INFO:root:Log response: <Response status_code=200, "application/json">

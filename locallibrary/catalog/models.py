@@ -20,3 +20,7 @@ class Employee(models.Model):
     emp_salary=models.IntegerField()
     emp_no=models.IntegerField()
     emp_address=models.CharField(max_length=100)
+
+# api view to directly convert into json 
+
+
