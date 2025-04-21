@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin,BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -8,62 +8,88 @@ from django.dispatch import receiver
 
 
 class categories(models.Model):
-    category_id=models.CharField(30)
-    category_name=models.CharField(30)
+    category_id=models.CharField(max_length=30)
+    category_name=models.CharField(max_length=30)
+    category_size=models.CharField(max_length=30)
+    category_holds_upto=models.IntegerField()
+    per_km_price=models.FloatField()
     def __str__(self):
         return self.category_name
 
 
 class vehicle(models.Model):
-    vehicle_id=models.CharField(25)
-    vehicle_model=models.CharField(30)
-    vehicle_name=models.CharField(30)
-    vehicle_state=models.CharField(30)
+    vehicle_id=models.CharField(max_length=25)
+    vehicle_model=models.CharField(max_length=30)
+    vehicle_name=models.CharField(max_length=30)
+    vehicle_state=models.CharField(max_length=30)
     category_id=models.ForeignKey(categories,on_delete=models.CASCADE)
-
-class MyUser(AbstractUser):
-    user_types=((1,'Admin'),(2,'Driver'),(3,'user'))
-    user_type=models.CharField(default=1,choices=user_types,max_length=10)
-
-class Admin(models.Model):
-    admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now_add=True)
-
-class Driver(models.Model):
-    name=models.CharField(max_length=30)
-    experience=models.FloatField()
-    adhar_no=models.CharField(max_length=16)
+class Usermanager(BaseUserManager):
+    def create_user(self,email,password=None,**extra_fields):
+        if not email:
+            raise ValueError('the email must be set')
+        email=self.normalize_email(email)
+        user=self.model(email=email,**extra_fields)
+        user.set_password(password)
+        user.save()
+        return user
+    def super_user(self,email,password=None,**extra_fields):
+        extra_fields.setdefault('user_type','admin')
+        extra_fields.setdefault('is_staff',True)
+        extra_fields.setdefault('is_superuser',True)
+        return self.create_user(email,password,**extra_fields)
+class MyUser(AbstractBaseUser,PermissionsMixin):
+    user_id = models.AutoField(primary_key=True)
+    user_types=((1,'Admin'),(2,'Driver'),(3,'client'))
+    name=models.CharField(max_length=30,null=True)
+    adhar_no=models.CharField(max_length=16,null=True,blank=True)
     address=models.CharField(max_length=100)
-    admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
-
-
-class user(models.Model):
-    name=models.CharField(max_length=30)
     email=models.EmailField(unique=True)
-    mobile_no=models.CharField(max_length=10)
-    admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
+    user_type=models.CharField(default=3,choices=user_types,max_length=10)
+    bank_account_number = models.CharField(max_length=30, null=True, blank=True)
+    is_active=models.BooleanField(default=True)
+    is_staff=models.BooleanField(default=False)
+    USERNAME_FIELD='email'
+    REQUIRED_FIELDS=['name']
+    objects=Usermanager()
 
-@receiver(post_save,sender=MyUser)
-def user_created(sender,instance,created,**kwargs):
-    if created:
-        if instance.user_type==1:
-            Admin.objects.create(admin=instance)
-        if instance.user_type==2:
-            Driver.objects.create(admin=instance)
-        if instance.user_type==3:
-            user.objects.create(admin=instance)
+    def __str__(self):
+        return self.email
+    
+class Order(models.Model):
+    order_time=models.DateTimeField(auto_now_add=True)
+    vehicle_id=models.ForeignKey(vehicle,on_delete=models.CASCADE)
+    pickup_location=models.CharField(max_length=100)
+    drop_location=models.CharField(max_length=100)
+    amount=models.FloatField(default=0)
+    payment_method=models.CharField(max_length=30)
+    user_id=models.ForeignKey(MyUser,on_delete=models.CASCADE)
+
+
+# class Admin(models.Model):
+#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
+#     created_at=models.DateTimeField(auto_now_add=True)
+#     updated_at=models.DateTimeField(auto_now_add=True)
+
+# class Driver(models.Model):
+#     name=models.CharField(max_length=30,null=True)
+#     experience=models.FloatField(null=True)
+#     adhar_no=models.CharField(max_length=16,null=True)
+#     address=models.CharField(max_length=100,null=True)
+#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
+
+
+# class client(models.Model):
+#     name=models.CharField(max_length=30,null=True)
+#     email=models.EmailField(unique=True,null=True)
+#     mobile_no=models.CharField(max_length=10,null=True)
+#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
+
 # @receiver(post_save,sender=MyUser)
-# def user_save(sender,instance,created,**kwargs):
-#     if instance.user_type==1:
-#         instance.Admin.save()
-#     if instance.user_type==2:
-#         instance.Driver.save()
-#     if instance.user_type==3:
-#         instance.user.save()
-    
-
-
-    
-
-# class User()
+# def user_created(sender,instance,created,**kwargs):
+#     if created:
+#         if instance.user_type==1:
+#             Admin.objects.create(admin=instance)
+#         if instance.user_type==2:
+#             Driver.objects.create(admin=instance)
+#         if instance.user_type==3:
+#             client.objects.create(admin=instance)
