@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-&4d#r!nzi!xdk=-f_l%19-3cm)=ech#+s)*5vkncne24su!q)0
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+STATIC_URL = '/static/'
+LOGIN_URL = '/porter/login/'
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,11 +40,18 @@ INSTALLED_APPS = [
     'rest_framework',
     'porter_app',
     'rest_framework.authtoken',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+
 }
 
 MIDDLEWARE = [

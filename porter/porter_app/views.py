@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect, get_object_or_404
 from django.http import HttpResponse,JsonResponse
 from .models import MyUser,vehicle,categories,Order
 from rest_framework.views import APIView
@@ -14,47 +14,91 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 import json
+from django.contrib.auth import authenticate, login
+from .forms import UserSignupForm
 
 
-def index():
-    return HttpResponse("welcome to porter")
+def index(request):
+    return render(request, "porter_app/index.html")
 
 class SignUpView(APIView):
+    def get(self, request):
+        form = UserSignupForm()
+        return render(request, 'porter_app/signup.html', {'form': form})
+
     def post(self,request):
         serializer=UserSignupSerializer(data=request.data)
         if serializer.is_valid():
             user=serializer.save()
             token,created= Token.objects.get_or_create(user=user)
-            return Response({"msg":"user created successfully","token":token.key},status=status.HTTP_201_CREATED)
+            
+            return redirect('login')
         return Response(serializer.errors,status=400)
 
 
 class LoginView(APIView):
+    def get(self, request):
+        return render(request, 'porter_app/login.html')
     def post(self,request):
         email=request.data.get("email")
         password=request.data.get("password")
-        user=authenticate(request,email=email,password=password)
+        user = authenticate(request, username=email, password=password)
+        print("user",user)
+        
         if user:
-            token,created=Token.objects.get_or_create(user=user)
-            return Response({"msg":"login successful","token":token.key})
-        return Response({"error","invalid credential"},status=401)
+            # Log the user in using Django's session-based authentication
+            login(request, user)
+
+            # Create or get the token for the user
+            token, created = Token.objects.get_or_create(user=user)
+
+            # Check the user type and redirect accordingly
+            if user.user_type == "2":  # Driver
+                # If the driver doesn't have a vehicle, redirect to add vehicle page
+                # if not vehicle.objects.filter(driver=user).exists():
+                #     return redirect('add_vehicle')
+                return redirect('driver_dashboard')
+            else:  # Client
+                # Redirecting to 'booking' for clients
+                response = redirect('booking')
+
+                # Add the token to the response headers
+                response['Authorization'] = f'Token {token.key}'
+                
+                return response
+
+        # If authentication fails
+        return JsonResponse({"error": "Invalid credentials"}, status=401)
 
 class Add_vehicle_view(APIView):
-    authentication_classes = [TokenAuthentication]
-    permission_classes = [IsAuthenticated]
+    
     def post(self,request):
         print(request.user.user_type)
-        if request.user.user_type!="1":
+        if request.user.user_type=="1":
+            serializer=VehicleSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"msg":"vehicle has been added"})
             return Response({"error","only admin can add vehicle"})
-        serializer=VehicleSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"msg","vehicle has been added"})
-        return Response(serializer.errors,status=400)
+        elif request.user.user_type=="2":
+            data=request.data.copy()
+            data["driver"]=request.user.id
+            serializer=VehicleSerializer(data=data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({"msg","vehicle has been added by driver"})
+            return Response(serializer.errors,status=400)
+        return Response({"error":"unauthorized"},status=403)
+    
     def get(self,request):
-        if request.user.user_type!="1":
-            return Response({"error","only admin have rights vehicle"})
-        v=vehicle.objects.all()
+
+        if request.user.user_type=="1":
+            v=vehicle.objects.all()
+        elif request.user.user_type=="2":
+            v=vehicle.objects.filter(driver=request.user)
+        else:
+            return Response({"error","unauthorised"})
+        
         serializer=VehicleSerializer(v,many=True)
         json_data=JSONRenderer().render(serializer.data)
         return HttpResponse(json_data,content_type='application/json')
@@ -80,6 +124,17 @@ class add_category(APIView):
         return HttpResponse(json_data,content_type='application/json')
 # @method_decorator(login_required, name='dispatch')   
 class Booking(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        if request.user.user_type != "3":
+            return redirect('index')  # Only clients allowed
+        vehicles = vehicle.objects.all()
+        context = {
+        'categories': categories.objects.all()
+        }
+        return render(request, 'porter_app/booking.html',context)
+    
     def post(self,request):
         print(request)
         data = json.loads(request.body)
@@ -87,15 +142,28 @@ class Booking(View):
         pickup =data.get('pickup_location')
         print(pickup)
         drop=data.get('drop_location')
-        distance=get_distance(pickup,drop)
+        distance,time=get_distance(pickup,drop)
+        print(time)
+        if distance is None:
+            
+             return render(request, 'porter_app/booking.html', {
+            'categories': categories.objects.all(),
+            'error': 'Could not calculate distance. Please try again.'
+        })
         vehicle_id=data.get('vehicle_id')
         print(vehicle_id)
         v=vehicle.objects.filter(vehicle_id=vehicle_id).first()
+        if not v:
+            return render(request, 'porter_app/booking.html', {
+            'categories': categories.objects.all(),
+            'error': 'Selected vehicle not found.'
+        })
         print(v)
         ppk=v.category_id.per_km_price
         user=data.get('user_id')
+        print("distance is ",distance)
         payment_method=data.get('payment_method')
-        user = MyUser.objects.get(user_id=user)
+        user = request.user
         amount=distance * ppk
         Order.objects.create(
             user_id=user,
@@ -106,9 +174,23 @@ class Booking(View):
             payment_method=payment_method
 
         )
-        return HttpResponse("booking created successfully")
+        return render(request, 'porter_app/booking.html', {
+            'vehicles': vehicle.objects.all(),
+            'success': 'Booking successful!',
+            "amount":amount,
+            "distance":distance,
+            "time":time
+        })
     
-
+def get_vehicles(request, category_id):
+    vehicles = vehicle.objects.filter(category_id=category_id)
+    data = {
+        "vehicles": [
+            {"id": v.id, "name": v.vehicle_name, "model": v.vehicle_model}
+            for v in vehicles
+        ]
+    }
+    return JsonResponse(data)
 
 
 
@@ -168,13 +250,54 @@ def get_distance(pickup_name, drop_name):
             raise ValueError("No route found in response")
 
         distance_meters = route_data['routes'][0]['segments'][0]['distance']
-
+        duration_seconds = route_data['routes'][0]['segments'][0]['duration']
 
         # distance_meters = route_data['features'][0]['properties']['segments'][0]['distance']
         distance_km = distance_meters / 1000.0
+        duration_minutes = duration_seconds / 60.0
         print(f"Distance: {distance_km} km")
-        return distance_km
+        return distance_km,duration_minutes
 
     except Exception as e:
         print("❌ Error fetching distance:", e)
         return None
+@method_decorator(login_required, name='dispatch')
+class DriverDashboardView(View):
+    def get(self, request):
+        if request.user.user_type != '2':  # Only allow driver to see
+            return redirect('porter_app/index.html')  # Or show 403 or error page
+
+        # Retrieve orders related to the logged-in driver
+        available_orders = Order.objects.filter(status='pending', driver__isnull=True)
+        active_order = Order.objects.filter(driver=request.user, status='accepted').first()
+        print(available_orders)
+        print(active_order)
+        return render(request, 'porter_app/driver_booking.html', {
+            'available_orders': available_orders,
+            'active_order': active_order,
+        })
+        
+
+    def post(self, request):
+        order_id = request.POST.get('order_id')
+        action = request.POST.get('action')
+
+        # Get the order that the driver is interacting with
+        order = get_object_or_404(Order, id=order_id, driver=request.user)
+
+        if action == 'accept':
+            # Ensure the driver hasn't already accepted another order
+            if Order.objects.filter(driver=request.user, status='accepted').exists():
+                return render(request, 'porter_app/driver_booking.html', {
+                    'orders': Order.objects.filter(status="pending"),
+                    'error': 'You can only accept one order at a time.'
+                })
+            order.driver=request.user
+            order.status = 'accepted'
+        
+        elif action == 'reject':
+            order.status = 'rejected'
+
+        order.save()
+
+        return redirect('driver_dashboard')

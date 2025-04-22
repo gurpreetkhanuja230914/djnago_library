@@ -1,0 +1,58 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Porter App - Home</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="{% static 'porter_app/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'porter_app/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'porter_app/css/main.css' %}" rel="stylesheet">
+
+  <!-- Optional: Add your favicon -->
+  <link href="{% static 'porter_app/img/favicon.png' %}" rel="icon">
+</head>
+
+<body>
+
+<!-- Header -->
+<header class="bg-dark text-white py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <h1 class="h4 mb-0">Porter App</h1>
+    <div>
+      <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Login</a>
+      <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="py-5 text-center bg-light">
+  <div class="container">
+    <h2 class="mb-3">Your Lightning Fast Delivery Partner</h2>
+    <p class="lead">We deliver goods with speed and safety. Start now by signing up or logging in to your account!</p>
+  </div>
+</section>
+
+<!-- Optional Section: Services, About, etc. -->
+<section class="py-5">
+  <div class="container text-center">
+    <h3>What We Offer</h3>
+    <p>Fast delivery, Real-time tracking, Reliable service</p>
+  </div>
+</section>
+{% block content %}
+{% endblock %}
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+  <div class="container">
+    &copy; 2025 Porter App. All rights reserved.
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% extends 'porter_app/index.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Driver Dashboard</h2>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Order Time</th>
+            <th>Pickup Location</th>
+            <th>Drop Location</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in available_orders %}
+            <tr>
+                <td>{{ order.order_time }}</td>
+                <td>{{ order.pickup_location }}</td>
+                <td>{{ order.drop_location }}</td>
+                <td>${{ order.amount }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    {% if order.status == 'pending' %}
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accept</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    {% else %}
+                        <span class="text-muted">No actions</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="6">No orders found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{%endblock%}
