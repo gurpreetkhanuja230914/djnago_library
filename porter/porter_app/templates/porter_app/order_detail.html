@@ -1,0 +1,32 @@
+{% extends 'porter_app/index.html' %}
+
+{% block content %}
+<h2>Order Details</h2>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+<ul>
+
+    <li><strong>Order ID:</strong> {{ order.id }}</li>
+    <li><strong>User ID:</strong> {{ order.user_id }}</li>
+    <li><strong>Username:</strong> {{ user.name }}</li>
+    <li><strong>Source:</strong> {{ order.pickup_location }}</li>
+    <li><strong>Destination:</strong> {{ order.drop_location }}</li>
+    <li><strong>Amount:</strong> {{ order.amount }}</li>
+    <li><strong>Status:</strong> {{ order.status }}</li>
+    <form action="{% url 'order_detail' order.id%}" method ="post">
+        {% if order.status == 'pending' %}
+        <label for="otp" >Enter OTP</label>
+        <input type="text" name="otp" placeholder="enter otp">
+        <button type="submit" name="action" value="pickup">Pickup</button>
+    {% elif order.status == 'accepted' %}
+        <button type="submit" name="action" value="delivered">Delivered</button>
+    {% endif %}
+    </form>
+
+</ul>
+{%endblock%}

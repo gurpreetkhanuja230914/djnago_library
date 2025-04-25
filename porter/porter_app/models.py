@@ -9,7 +9,7 @@ from django.conf import settings
 
 
 class categories(models.Model):
-    category_id=models.CharField(max_length=30)
+    category_id=models.AutoField(primary_key=True)
     category_name=models.CharField(max_length=30)
     category_size=models.CharField(max_length=30)
     category_holds_upto=models.IntegerField()
@@ -19,9 +19,9 @@ class categories(models.Model):
 
 
 class vehicle(models.Model):
-    vehicle_id=models.CharField(max_length=25)
+    vehicle_id=models.AutoField(primary_key=True)
     vehicle_model=models.CharField(max_length=30)
-    vehicle_name=models.CharField(max_length=30)
+    vehicle_registration_number=models.CharField(max_length=30)
     vehicle_state=models.CharField(max_length=30)
     category_id=models.ForeignKey(categories,on_delete=models.CASCADE)
     driver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
@@ -89,37 +89,16 @@ class Order(models.Model):
     drop_location = models.CharField(max_length=100)
     amount = models.FloatField(default=0)
     payment_method = models.CharField(max_length=30)
+    abc=models.CharField(max_length=20)
     
     def __str__(self):
         return f"Order by {self.user_id.email} for {self.driver.email if self.driver else 'No driver'}"
-
-
-
-# class Admin(models.Model):
-#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
-#     created_at=models.DateTimeField(auto_now_add=True)
-#     updated_at=models.DateTimeField(auto_now_add=True)
-
-# class Driver(models.Model):
-#     name=models.CharField(max_length=30,null=True)
-#     experience=models.FloatField(null=True)
-#     adhar_no=models.CharField(max_length=16,null=True)
-#     address=models.CharField(max_length=100,null=True)
-#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
-
-
-# class client(models.Model):
-#     name=models.CharField(max_length=30,null=True)
-#     email=models.EmailField(unique=True,null=True)
-#     mobile_no=models.CharField(max_length=10,null=True)
-#     admin=models.OneToOneField(MyUser,on_delete=models.CASCADE)
-
-# @receiver(post_save,sender=MyUser)
-# def user_created(sender,instance,created,**kwargs):
-#     if created:
-#         if instance.user_type==1:
-#             Admin.objects.create(admin=instance)
-#         if instance.user_type==2:
-#             Driver.objects.create(admin=instance)
-#         if instance.user_type==3:
-#             client.objects.create(admin=instance)
+class Transaction(models.Model):
+    STATUS_CHOICES = (
+        ('pickup', 'Pickup'),
+        ('on the way', 'On the way'),
+        ('delivered', 'Delivered'),
+    )
+    transaction_id=models.AutoField(primary_key=True)
+    order_id=models.ForeignKey(Order,on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Pickup')

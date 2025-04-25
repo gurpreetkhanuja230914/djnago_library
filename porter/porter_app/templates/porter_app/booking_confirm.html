@@ -1,0 +1,20 @@
+{% extends 'porter_app/index.html' %}
+
+{% block content %}
+
+    <div class="alert alert-success">{{ success }}</div>
+    <div>
+      <strong>Estimated Distance:</strong> {{ distance }} km<br>
+      <strong>Estimated Price:</strong> {{amount }} rupees <br>
+      <strong>Estimated time:</strong> {{time }} min <br>
+      <strong>Status</strong> {{status }} <br>
+      <strong>OTP</strong> {{otp }} 
+    </div>
+    <hr>
+ 
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  {%endblock%}

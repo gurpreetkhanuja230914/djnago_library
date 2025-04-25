@@ -46,7 +46,15 @@ INSTALLED_APPS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+# settings.py
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'gurpreetkhanuja2309@gmail.com'        # Your Gmail address
+EMAIL_HOST_PASSWORD = 'mfze tmxd qvat hnyo'       # Use an App Password (not your real password)
+MESSAGE_STORAGE = "django.contrib.messages.storage.cookie.CookieStorage"
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',

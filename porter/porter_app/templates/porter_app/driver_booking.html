@@ -30,12 +30,13 @@
                 <td>{{ order.status }}</td>
                 <td>
                     {% if order.status == 'pending' %}
-                        <form method="post" style="display:inline;">
-                            {% csrf_token %}
-                            <input type="hidden" name="order_id" value="{{ order.id }}">
-                            <button type="submit" name="action" value="accept" class="btn btn-success btn-sm">Accept</button>
-                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">Reject</button>
-                        </form>
+                    <a href="{% url 'order_detail' order.id %}" class="btn btn-success btn-sm">Accept</a>
+
+                    <!-- Reject Button: Optional, could be a POST form or JS -->
+                    <form method="post" action="{% url 'reject_order' order.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
                     {% else %}
                         <span class="text-muted">No actions</span>
                     {% endif %}
