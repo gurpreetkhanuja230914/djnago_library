@@ -1,0 +1,28 @@
+
+{% extends 'porter_app/index.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Vehicle</title>
+</head>
+<body>
+  <h1>Add Your Vehicle</h1>
+
+  <form id="vehicle-form" action="{% url 'add_vehicle' %}" method="post">
+    <input type="text" name="vehicle_registration_number" placeholder="Vehicle Registration number" required>
+    <input type="text" name="vehicle_state" placeholder="Vehicle state" required>
+    <input type="text" name="vehicle_model" placeholder="Vehicle model" required>
+
+
+    <select id="category" name="category" required>
+        <option value="" disabled selected>Select a Category</option>
+        {% for category in categories %}
+          <option value="{{ category.category_id }}">{{ category.category_name }}</option>
+        {% endfor %}
+      </select>
+    <button type="submit">Submit</button>
+  </form>
+
+  {%endblock%}
