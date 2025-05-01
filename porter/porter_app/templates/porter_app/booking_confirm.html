@@ -4,10 +4,11 @@
 
     <div class="alert alert-success">{{ success }}</div>
     <div>
+      <input type="hidden" id="booking-id" value="{{ order_id }}" />
       <strong>Estimated Distance:</strong> {{ distance }} km<br>
       <strong>Estimated Price:</strong> {{amount }} rupees <br>
-      <strong>Estimated time:</strong> {{time }} min <br>
-      <strong>Status</strong> {{status }} <br>
+      <strong >Estimated time:</strong> {{time }} min <br>
+      <strong id="booking-status">Status</strong> {{status }} <br>
       <strong>OTP</strong> {{otp }} 
     </div>
     <hr>
@@ -17,4 +18,20 @@
     <div class="alert alert-danger">{{ error }}</div>
   {% endif %}
 
-  {%endblock%}
+  <script>
+    const socket = new WebSocket(
+      `ws://${window.location.host}/ws/porter/user/booking/confirm/{{ order_id }}/{{ distance }}/{{ amount }}/{{ time }}/`
+    );
+  
+    socket.onmessage = function(event) {
+      const data = JSON.parse(event.data);
+      document.getElementById("order-status").innerText = data.status;
+    };
+  
+    socket.onopen = () => console.log("WebSocket connected");
+    socket.onclose = () => console.log("WebSocket disconnected");
+  </script>
+  
+
+
+{%endblock%}

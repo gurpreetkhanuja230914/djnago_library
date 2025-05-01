@@ -74,6 +74,7 @@
 <form action="{% url 'all_booking'%}">
 <button id="all_booking" type="submit" value="all_booking">All Bookings</button>
 </form>
+<button><a href="{%url 'edit_profile'%}"> Edit Profile</a></button>
 {%endif%}
 
 <script>
@@ -99,6 +100,8 @@ document.addEventListener("DOMContentLoaded", function() {
       });
   });
   });
+
+
 
 
 </script>

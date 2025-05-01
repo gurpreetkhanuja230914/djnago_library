@@ -16,3 +16,12 @@ class UserSignupForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = 'post'
         self.helper.add_input(Submit('submit', 'Sign Up'))
+class EditProfileForm(forms.Form):
+    name=forms.CharField(max_length=30)
+    email=forms.EmailField(max_length=30)
+    user_type=forms.ChoiceField(choices=MyUser.user_types)
+    def __init__(self, *args,**kwargs):
+        super(EditProfileForm,self).__init__(*args,**kwargs)
+        self.helper=FormHelper()
+        self.helper.form_method='post'
+        self.helper.add_input(Submit('submit','Edit Profile'))

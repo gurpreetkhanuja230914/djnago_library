@@ -15,12 +15,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 import json
 from django.contrib.auth import authenticate, login
-from .forms import UserSignupForm
+from .forms import UserSignupForm,EditProfileForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
 import random
 from django.contrib import messages
+
 
 
 
@@ -37,7 +38,6 @@ class SignUpView(APIView):
         if serializer.is_valid():
             user=serializer.save()
             token,created= Token.objects.get_or_create(user=user)
-            
             return redirect('login')
         return Response(serializer.errors,status=400)
 
@@ -419,3 +419,40 @@ def all_booking(request):
     print(request.user)
 
     return render(request,'porter_app/booking.html',{"bookings":bookings})
+# @login_required
+def edit_profile(request):
+    user=request.user
+    if request.method =='POST':
+        form=EditProfileForm(request.POST)
+        if form.is_valid():
+            user.name=form.cleaned_data['name']
+            user.email=form.cleaned_data['email']
+            user.user_type=form.cleaned_data['user_type']
+            user.save()
+            return redirect('booking')
+    else:
+        form=EditProfileForm(initial={"name":user.name,"email":user.email,"user_type":user.user_type})
+        return render(request,'porter_app/edit_profile.html',{'form':form})
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+from .models import Order
+
+def update_booking_status(order_id, new_status):
+    # Get the order from the database
+    order = Order.objects.get(id=order_id)
+
+    # Update the status
+    order.status = new_status
+    order.save()
+
+    # Get the channel layer to send a message to the WebSocket group
+    channel_layer = get_channel_layer()
+
+    # Send a message to the WebSocket group (connected to the specific booking)
+    async_to_sync(channel_layer.group_send)(
+        f'booking_{order_id}',  # Group name
+        {
+            'type': 'booking_status_update',  # Method in consumer
+            'status': new_status  # Send status update
+        }
+    )

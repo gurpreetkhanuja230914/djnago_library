@@ -10,9 +10,11 @@ urlpatterns=[
     path("user/booking/",views.Booking.as_view(),name="booking"),
     path("user/booking/confirm/<str:order_id>/<str:distance>/<str:amount>/<str:time>/",views.booking_confirm,name="booking_confirm"),
     path("user/booking/all_booking",views.all_booking,name='all_booking'),
+    path("user/edit/",views.edit_profile,name='edit_profile'),
     path('get-vehicles/<int:category_id>/', views.get_vehicles, name='get_vehicles'),
     path('driver/dashboard/',views.DriverDashboardView.as_view(), name='driver_dashboard'),
     path('driver/dashboard/order/<int:order_id>/', views.order_detail, name='order_detail'),
     path('driver/dashboard/order/<int:order_id>/reject/', views.reject_order, name='reject_order'),
+
 ]
 
